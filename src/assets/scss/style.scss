@@ -1,0 +1,10 @@
+@import "reset";
+@import "variables";
+@import "mixins";
+@import '../../../node_modules/bootstrap/scss/bootstrap';
+@import '../../../node_modules/bootstrap-vue/src/index.scss';
+
+.app-container {
+  max-width: 680px;
+  margin: 0 auto;
+}
