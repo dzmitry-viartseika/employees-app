@@ -1,8 +1,14 @@
 <template>
   <div id="app" class="app-container">
-    <h1>Employees</h1>
-    <employee-form @submitHandle="submitHandle" :validateFields.sync="validateFields" />
-    <employee-table :items="items" :fields="fields" />
+    <h1 class="app__title">Employees</h1>
+    <employee-form @submitHandle="submitHandle"
+                   :validateFields.sync="validateFields"
+                   :sendForm.sync="sendForm"
+                   :itemsLenght="itemsLenght"
+    />
+    <employee-table :items="items"
+                    @deleteItem="deleteItem"
+    />
   </div>
 </template>
 
@@ -17,27 +23,36 @@ export default {
     EmployeeForm,
   },
   data: () => ({
-    items: [
-      {
-        name: 'Richard Hendricks',
-        email: 'richard@piedpiper.com',
-      },
-      {
-        name: 'Bertram Gilfoyle',
-        email: 'gilfoyle@piedpiper.com',
-      },
-      {
-        name: 'Dinesh Chugtai',
-        email: 'dinesh@piedpiper.com',
-      },
-    ],
-    fields: ['name', 'email'],
+    items: [],
     validateFields: false,
+    sendForm: false,
   }),
+  computed: {
+    itemsLenght() {
+      return this.items.length;
+    },
+  },
   methods: {
     submitHandle(data) {
-      console.log('test', data);
+      this.sendForm = true;
+      setTimeout(() => {
+        this.sendForm = false;
+      }, 2000);
+      this.items = [...this.items, data];
+      localStorage.setItem('employees', JSON.stringify(this.items));
     },
+    deleteItem(id) {
+      this.items = this.items.filter(
+        (employee) => employee.id !== id,
+      );
+      localStorage.setItem('employees', JSON.stringify(this.items));
+    },
+  },
+  beforeMount() {
+    const items = JSON.parse(localStorage.getItem('employees'));
+    if (items === null) {
+      this.items = [];
+    } else this.items = items;
   },
 };
 </script>
